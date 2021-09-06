@@ -1,20 +1,26 @@
+import { TestBed } from "@angular/core/testing";
 import { CalculatorService } from "./calculator.service";
+import { LoggerService } from "./logger.service";
 
-describe('CalculatorService', ()=> {
+describe('CalculatorService', () => {
 
     let calculator: CalculatorService,
-    loggerSpy: any
+        loggerSpy: any
 
-    beforeEach(()=>{
-        
+    beforeEach(() => {
+
         console.log("BeforeEach")
-
         //Spy
         loggerSpy = jasmine.createSpyObj('logger', ['log']);
-        calculator = new CalculatorService(loggerSpy);
-    })    
-    
-    it('should add two numbers', ()=>{
+
+        TestBed.configureTestingModule({
+            providers: [CalculatorService, { provide: LoggerService, useValue: loggerSpy }]
+        })
+
+        calculator = TestBed.inject(CalculatorService)
+    })
+
+    it('should add two numbers', () => {
 
         console.log("Add Test")
 
@@ -25,7 +31,7 @@ describe('CalculatorService', ()=> {
 
     })
 
-    it('should substract two numbers', ()=>{
+    it('should substract two numbers', () => {
 
         console.log("Sub Test")
 
