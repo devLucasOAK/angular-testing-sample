@@ -9,7 +9,7 @@ describe('CalculatorService', () => {
 
     beforeEach(() => {
 
-        console.log("BeforeEach")
+        //console.log("BeforeEach")
         //Spy
         loggerSpy = jasmine.createSpyObj('logger', ['log']);
 
@@ -22,7 +22,7 @@ describe('CalculatorService', () => {
 
     it('should add two numbers', () => {
 
-        console.log("Add Test")
+        //console.log("Add Test")
 
         const result = calculator.add(2, 2);
 
@@ -33,7 +33,7 @@ describe('CalculatorService', () => {
 
     it('should substract two numbers', () => {
 
-        console.log("Sub Test")
+        //console.log("Sub Test")
 
 
         const result = calculator.subtract(2, 2);

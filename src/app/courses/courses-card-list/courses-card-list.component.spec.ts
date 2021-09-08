@@ -9,10 +9,11 @@ import {Course} from '../model/course';
 import {setupCourses} from '../common/setup-test-data';
 
 
-fdescribe('CoursesCardListComponent', () => {
+describe('CoursesCardListComponent', () => {
 
   let component: CoursesCardListComponent
   let fixture: ComponentFixture<CoursesCardListComponent>
+  let el: DebugElement
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
@@ -21,6 +22,7 @@ fdescribe('CoursesCardListComponent', () => {
     .then(() => {
       fixture = TestBed.createComponent(CoursesCardListComponent);
       component = fixture.componentInstance;
+      el = fixture.debugElement
     })
   }))
 
@@ -34,15 +36,34 @@ fdescribe('CoursesCardListComponent', () => {
 
   it("should display the course list", () => {
 
-    pending();
+    component.courses = setupCourses();
+    fixture.detectChanges() //Call everytime we input data in component
 
+    const cards = el.queryAll(By.css(".course-card"));
+    expect(cards).toBeTruthy("Could Not find cards")
+    expect(cards.length).toBe(12, "Unexpected number of courses");
   });
 
 
   it("should display the first course", () => {
 
-      pending();
+    component.courses = setupCourses();
+    fixture.detectChanges() //Call everytime we input data in component
+    //Debug element
+    // console.log(el.nativeElement.outerHTML)
 
+    const course = component.courses[0]
+
+    const card = el.query(By.css(".course-card:first-child")),
+    title = card.query(By.css("mat-card-title")),
+    image = card.query(By.css("img"));
+
+    console.log(title.nativeElement.outerHTML)
+    console.log(image.nativeElement.outerHTML)
+
+    expect(card).toBeTruthy("Could Not find card")
+    expect(title.nativeElement.textcontent).toBe(course.titles.description, "Description Not Found")
+    expect(image.nativeElement.src).toBe(course.iconUrl, "IconUrl Not Found")
   });
 
 
