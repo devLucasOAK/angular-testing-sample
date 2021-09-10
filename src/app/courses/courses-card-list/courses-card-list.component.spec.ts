@@ -40,6 +40,9 @@ describe('CoursesCardListComponent', () => {
     fixture.detectChanges() //Call everytime we input data in component
 
     const cards = el.queryAll(By.css(".course-card"));
+    console.log(cards)
+
+
     expect(cards).toBeTruthy("Could Not find cards")
     expect(cards.length).toBe(12, "Unexpected number of courses");
   });
@@ -58,8 +61,7 @@ describe('CoursesCardListComponent', () => {
     title = card.query(By.css("mat-card-title")),
     image = card.query(By.css("img"));
 
-    console.log(title.nativeElement.outerHTML)
-    console.log(image.nativeElement.outerHTML)
+    console.log(card)
 
     expect(card).toBeTruthy("Could Not find card")
     expect(title.nativeElement.textcontent).toBe(course.titles.description, "Description Not Found")

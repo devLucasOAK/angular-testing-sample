@@ -1,4 +1,4 @@
-import {async, ComponentFixture, fakeAsync, flush, flushMicrotasks, TestBed, waitForAsync} from '@angular/core/testing';
+import {async, ComponentFixture, flush, flushMicrotasks, TestBed, waitForAsync} from '@angular/core/testing';
 import {CoursesModule} from '../courses.module';
 import {DebugElement} from '@angular/core';
 
@@ -16,7 +16,7 @@ import {click} from '../common/test-utils';
 
 
 
-fdescribe('HomeComponent', () => {
+describe('HomeComponent', () => {
 
   let fixture: ComponentFixture<HomeComponent>;
   let component:HomeComponent;
@@ -96,10 +96,12 @@ fdescribe('HomeComponent', () => {
 
     expect(tabs.length).toBe(2, "Expected 2 tabs")
 
+    pending()
+
   });
 
 
-  it("should display advanced courses when tab clicked", () => {
+  it("should display advanced courses when tab clicked", (done:DoneFn) => {
 
     //FAILING FOR NOW
 
@@ -114,12 +116,18 @@ fdescribe('HomeComponent', () => {
     el.nativeElement.click(tabs[1]);
 
     fixture.detectChanges();
-    
-    const cardTitles = el.queryAll(By.css(".mat-tab-title"))
 
-    expect(cardTitles.length).toBeGreaterThan(0, "couldNotEmpty")
-    expect(cardTitles[0].nativeElement.textContent).toContain("Angular Security Course")
+    setTimeout(()=> {   
+      const cardTitles = el.queryAll(By.css(".mat-tab-title"))
+      expect(cardTitles.length).toBeGreaterThan(0, "couldNotEmpty")
+      expect(cardTitles[0].nativeElement.textContent).toContain("Angular Security Course")
+
+      done()
+    },500)
+    
   });
+
+  pending()
 
 });
 
