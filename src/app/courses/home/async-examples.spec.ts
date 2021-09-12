@@ -1,7 +1,9 @@
-import { fakeAsync, flush, tick } from '@angular/core/testing'
+import { fakeAsync, flush, flushMicrotasks, tick } from '@angular/core/testing'
+import { of } from 'rxjs'
+import { delay } from 'rxjs/operators'
 
 
-fdescribe('Async Examples', () => {
+describe('Async Examples', () => {
 
     it('Jasmine Done', (done:DoneFn) => {
     
@@ -11,12 +13,12 @@ fdescribe('Async Examples', () => {
         let test = false
         
         setTimeout(()=> {
-            console.log("run assertions")
+            
             test = true
             expect(test).toBeTruthy()
+            done()
         },1000)
 
-        done()
     })
 
     it('Fake Async', fakeAsync(() => {
@@ -24,7 +26,7 @@ fdescribe('Async Examples', () => {
         let test = false
         
         setTimeout(()=> {
-            console.log("run assertions")
+            
             test = true
             expect(test).toBeTruthy()
         },1000)
@@ -40,35 +42,63 @@ fdescribe('Async Examples', () => {
 
     }))
 
-    it('Resolve Promises', () => {
+    it('Resolve Promises', fakeAsync(() => {
 
         //TODO
 
         let test = false
 
-        
-        console.log("First TimeOut")
-        setTimeout(()=> {
-            console.log("TimeOut")
-        })
-
-        console.log("Second TimeOut")
-        setTimeout(()=> {
-            console.log("TimeOut")
-        })
-        
         //Promise has priorities over Timeouts
-        console.log("Promise")
+        
         Promise.resolve()
         .then(()=>{
-            console.log("First then Block")
+            
             return Promise.resolve().then(() => {
-                console.log("Second then Block")
+                
                 test = true
             })
         })
-        console.log("Expect assertions")
+
+        //Flush Promises before assertions
+        flushMicrotasks()
+        
         expect(test).toBeTruthy()
 
-    })
+    }))
+
+    it('Promises + Timeout', fakeAsync(() => {
+
+        let counter = 0
+
+        Promise.resolve().then(() => {
+
+            counter += 10;
+
+            setTimeout(() => {
+
+                counter += 10;
+
+            },1000)
+        })
+
+        expect(counter).toBe(0)
+        flushMicrotasks()
+        expect(counter).toBe(10)
+        flush()
+        expect(counter).toBe(20)
+    }))
+
+    it('Observables', fakeAsync(() => {
+
+        let test = false
+        
+        const test$ = of(test).pipe(delay(1000))
+
+        test$.subscribe(() => {
+            test = true
+        })
+
+        tick(1000)
+        expect(test).toBe(true)
+    }))
 }) 

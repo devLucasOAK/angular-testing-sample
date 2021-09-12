@@ -1,20 +1,12 @@
-import {async, ComponentFixture, flush, flushMicrotasks, TestBed, waitForAsync} from '@angular/core/testing';
-import {CoursesModule} from '../courses.module';
-import {DebugElement} from '@angular/core';
-
-import {HomeComponent} from './home.component';
-import {HttpClientTestingModule, HttpTestingController} from '@angular/common/http/testing';
-import {CoursesService} from '../services/courses.service';
-import {HttpClient} from '@angular/common/http';
-import {COURSES} from '../../../../server/db-data';
-import {setupCourses} from '../common/setup-test-data';
-import {By} from '@angular/platform-browser';
-import {of} from 'rxjs';
-import {NoopAnimationsModule} from '@angular/platform-browser/animations';
-import {click} from '../common/test-utils';
-
-
-
+import { DebugElement } from '@angular/core';
+import { ComponentFixture, fakeAsync, flush, TestBed, waitForAsync } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { of } from 'rxjs';
+import { setupCourses } from '../common/setup-test-data';
+import { CoursesModule } from '../courses.module';
+import { CoursesService } from '../services/courses.service';
+import { HomeComponent } from './home.component';
 
 describe('HomeComponent', () => {
 
@@ -28,6 +20,8 @@ describe('HomeComponent', () => {
 
   const advancedCourses = setupCourses()
   .filter(course => course.category === 'ADVANCED')
+
+
 
   beforeEach(waitForAsync(() => {
 
@@ -88,7 +82,7 @@ describe('HomeComponent', () => {
 
   it("should display both tabs", () => {
 
-    coursesService.findAllCourses.and.returnValue(of(setupCourses))
+    coursesService.findAllCourses.and.returnValue(of(setupCourses()))
     
     fixture.detectChanges();
 
@@ -96,39 +90,53 @@ describe('HomeComponent', () => {
 
     expect(tabs.length).toBe(2, "Expected 2 tabs")
 
-    pending()
-
   });
 
 
-  it("should display advanced courses when tab clicked", (done:DoneFn) => {
+  it("should display advanced courses when tab clicked - fakeAsync", fakeAsync(() => {
 
-    //FAILING FOR NOW
+    coursesService.findAllCourses.and.returnValue(of(setupCourses()));
 
-    //TODO: ASYNC LESSON
+    fixture.detectChanges();
 
-    coursesService.findAllCourses.and.returnValue(of(setupCourses))
+    const tabs = el.queryAll(By.css(".mat-tab-label"));
+
+    tabs[1].nativeElement.click()
+
+    fixture.detectChanges();
+
+    flush();
+
+    const cardTitles = el.queryAll(By.css('.mat-tab-body-active .mat-card-title'));
+
+    console.log(cardTitles);
+
+    expect(cardTitles.length).toBeGreaterThan(0,"Could not find card titles");
+
+    expect(cardTitles[0].nativeElement.textContent).toContain("Angular Security Course");
+
+}));
+
+  it("should display advanced courses when tab clicked - waitForAsync", waitForAsync(() => {
+
+    coursesService.findAllCourses.and.returnValue(of(setupCourses()))
 
     fixture.detectChanges();
 
     const tabs = el.queryAll(By.css(".mat-tab-label"))
 
-    el.nativeElement.click(tabs[1]);
+    tabs[1].nativeElement.click()
 
     fixture.detectChanges();
 
-    setTimeout(()=> {   
-      const cardTitles = el.queryAll(By.css(".mat-tab-title"))
+    //when stable similar to timeout()
+    fixture.whenStable().then(()=> {   
+      const cardTitles = el.queryAll(By.css('.mat-tab-body-active .mat-card-title'));
+      console.log(cardTitles)
       expect(cardTitles.length).toBeGreaterThan(0, "couldNotEmpty")
       expect(cardTitles[0].nativeElement.textContent).toContain("Angular Security Course")
-
-      done()
-    },500)
-    
-  });
-
-  pending()
-
+    })
+  }));
 });
 
 

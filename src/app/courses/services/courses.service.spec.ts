@@ -1,9 +1,9 @@
-import { TestBed } from "@angular/core/testing"
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing'
-import { CoursesService } from "./courses.service"
-import { COURSES, findLessonsForCourse, LESSONS } from "../../../../server/db-data"
-import { Course } from "../model/course"
 import { HttpErrorResponse } from "@angular/common/http"
+import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing'
+import { TestBed } from "@angular/core/testing"
+import { COURSES, findLessonsForCourse } from "../../../../server/db-data"
+import { Course } from "../model/course"
+import { CoursesService } from "./courses.service"
 
 describe('courseService', ()=> {
     
@@ -46,7 +46,7 @@ describe('courseService', ()=> {
         })
 
         const req = http.expectOne('/api/courses/12')
-        console.log(req.request.url)
+        
         //expect(req.request.method).toEqual('GET')
         
         req.flush(COURSES[12])

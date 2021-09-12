@@ -1,12 +1,9 @@
-import {async, ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
-import {CoursesCardListComponent} from './courses-card-list.component';
-import {CoursesModule} from '../courses.module';
-import {COURSES} from '../../../../server/db-data';
-import {DebugElement} from '@angular/core';
-import {By} from '@angular/platform-browser';
-import {sortCoursesBySeqNo} from '../home/sort-course-by-seq';
-import {Course} from '../model/course';
-import {setupCourses} from '../common/setup-test-data';
+import { DebugElement } from '@angular/core';
+import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
+import { By } from '@angular/platform-browser';
+import { setupCourses } from '../common/setup-test-data';
+import { CoursesModule } from '../courses.module';
+import { CoursesCardListComponent } from './courses-card-list.component';
 
 
 describe('CoursesCardListComponent', () => {
@@ -40,7 +37,7 @@ describe('CoursesCardListComponent', () => {
     fixture.detectChanges() //Call everytime we input data in component
 
     const cards = el.queryAll(By.css(".course-card"));
-    console.log(cards)
+    
 
 
     expect(cards).toBeTruthy("Could Not find cards")
@@ -53,7 +50,7 @@ describe('CoursesCardListComponent', () => {
     component.courses = setupCourses();
     fixture.detectChanges() //Call everytime we input data in component
     //Debug element
-    // console.log(el.nativeElement.outerHTML)
+    // 
 
     const course = component.courses[0]
 
@@ -61,11 +58,10 @@ describe('CoursesCardListComponent', () => {
     title = card.query(By.css("mat-card-title")),
     image = card.query(By.css("img"));
 
-    console.log(card)
-
     expect(card).toBeTruthy("Could Not find card")
-    expect(title.nativeElement.textcontent).toBe(course.titles.description, "Description Not Found")
+    expect(title.nativeElement.textContent).toBe(course.titles.description, "Description Not Found")
     expect(image.nativeElement.src).toBe(course.iconUrl, "IconUrl Not Found")
+
   });
 
 
